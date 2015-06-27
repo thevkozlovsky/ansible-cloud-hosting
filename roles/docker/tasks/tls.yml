@@ -1,0 +1,43 @@
+# See: http://docs.docker.com/articles/https/
+- name: uploads certifications
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0400
+    owner: root
+  with_items:
+    - { src: "certs/ca/ca.pem", dest: "{{ docker.tls.ca.cert_file }}" }
+    - { src: "certs/ca/ca-key.pem", dest: "{{ docker.tls.ca.key_file }}" }
+  # restart docker if certifications changes
+  notify: restart docker
+
+
+- name: generates RSA private key
+  command: "openssl genrsa -out {{ docker.tls.server.key_file }} 4096"
+  args:
+    chdir: "{{ docker.tls.dir }}"
+    creates: "{{ docker.tls.server.key_file }}"
+  # restart docker if key changes
+  notify: restart docker
+
+
+- name: creates certificate signing request
+  command: "openssl req -subj '/CN={{ ansible_fqdn }}' -sha256 -new -key {{ docker.tls.server.key_file }} -out {{ docker.tls.dir }}/server.csr"
+  args:
+    chdir: "{{ docker.tls.dir }}"
+    creates: "{{ docker.tls.dir }}/server.csr"
+
+
+- name: uploads 'extfile.cnf' configuration file
+  template:
+    src: "tls/extfile.cnf.j2"
+    dest: "{{ docker.tls.dir }}/extfile.cnf"
+
+
+- name: generates certificate
+  command: "openssl x509 -req -days 365 -sha256 -in {{ docker.tls.dir }}/server.csr -CA {{ docker.tls.ca.cert_file }} -CAkey {{ docker.tls.ca.key_file }} -CAcreateserial -out {{ docker.tls.server.cert_file }} -extfile {{ docker.tls.dir }}/extfile.cnf -passin 'pass:{{ certs.ca.password }}'"
+  args:
+    chdir: "{{ docker.tls.dir }}"
+    creates: "{{ docker.tls.server.cert_file }}"
+  # restart docker if certificate changes
+  notify: restart docker

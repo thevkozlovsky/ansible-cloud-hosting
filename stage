@@ -1,7 +1,7 @@
 [cloud-ams3]
 1.1.1.1   debian_release=testing   hostname=debian1
 1.1.1.2   debian_release=testing   hostname=debian2
-1.1.1.3  debian_release=testing   hostname=debian3
+1.1.1.3   debian_release=testing   hostname=debian3
 
 
 # cloud in all DC

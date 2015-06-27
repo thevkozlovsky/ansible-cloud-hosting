@@ -1,3 +1,7 @@
+certs:
+  ca:
+    password: 'YOUR PASSWORD HERE'
+
 ssh:
   users:
     # user for ansible

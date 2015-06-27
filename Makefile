@@ -19,3 +19,7 @@ tasks:
 
 hosts:
 	@(ansible-playbook -i stage site.yml --list-hosts)
+
+gen-ca:
+	@(openssl genrsa -aes256 -out certs/ca/ca-key.pem 4096)
+	@(openssl req -new -x509 -days 365 -key certs/ca/ca-key.pem -sha256 -out certs/ca/ca.pem)

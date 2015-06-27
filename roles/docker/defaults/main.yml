@@ -1,0 +1,10 @@
+docker:
+  tls:
+    enabled: yes
+    dir: "/etc/docker/tls"
+    ca:
+      cert_file: "/etc/docker/tls/ca.pem"
+      key_file: "/etc/docker/tls/ca-key.pem"
+    server:
+      cert_file: "/etc/docker/tls/server-cert.pem"
+      key_file: "/etc/docker/tls/server-key.pem"
