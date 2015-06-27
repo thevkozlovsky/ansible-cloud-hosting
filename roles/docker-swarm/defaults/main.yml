@@ -1,0 +1,10 @@
+swarm:
+  tls:
+    enabled: yes
+    dir: "/etc/docker/tls"
+    ca:
+      cert_file: "/etc/docker/tls/ca.pem"
+      key_file: "/etc/docker/tls/ca-key.pem"
+    client:
+      cert_file: "/etc/docker/tls/cert.pem"
+      key_file: "/etc/docker/tls/key.pem"

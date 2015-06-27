@@ -10,3 +10,4 @@
 - hosts: cloud
   roles:
     - docker
+    - docker-swarm

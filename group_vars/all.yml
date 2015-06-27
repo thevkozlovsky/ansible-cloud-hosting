@@ -1,6 +1,10 @@
 certs:
   ca:
-    password: 'YOUR PASSWORD HERE'
+    password: "YOUR PASSWORD HERE"
+
+docker_swarm:
+  token: "YOUR DOCKER SWARM TOKEN HERE"
+  manager: "YOU DOCKER SWARM MANAGER IP HERE"
 
 ssh:
   users:

@@ -1,0 +1,31 @@
+- name: installs 'docker'
+  apt: 
+    name: docker.io
+    update_cache: yes
+    cache_valid_time: 3600
+
+
+- name: adds 'docker' to start on boot
+  service:
+    name: docker
+    enabled: yes
+
+
+# Required for 'docker' ansible module
+- name: installs 'docker-py'
+  pip: 
+    name: docker-py
+    # TODO: Remove this (Fix for: Docker API error: client and server don't have same version (client : 1.17, server: 1.15))
+    version: 0.6.0
+
+
+- include: tls.yml
+  when: docker.tls.enabled
+
+
+- name: uploads docker configuration file
+  template:
+    src: "docker.j2"
+    dest: "/etc/default/docker"
+  # restart docker if configuration changes
+  notify: restart docker

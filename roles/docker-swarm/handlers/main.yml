@@ -1,0 +1,5 @@
+- name: restart swarm-manager
+  docker:
+    image: library/swarm:latest
+    name: docker-swarm-manager
+    state: restarted

@@ -1,0 +1,11 @@
+- name: retrieves and launches 'Docker Swarm' image
+  docker: 
+    image: library/swarm:latest
+    hostname: "{{ ansible_hostname }}"
+    name: docker-swarm
+    command: "join --addr={{ ansible_eth0.ipv4.address }}:2376 token://{{ docker_swarm.token }}"
+    # try to restart if the container exits
+    restart_policy: always
+    # it will try to restart 3 times before giving up
+    restart_policy_retry: 3
+    state: started
