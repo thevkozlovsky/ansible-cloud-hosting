@@ -1,0 +1,8 @@
+# Apply common roles to all hosts
+- hosts: all
+  gather_facts: no
+  #sudo: yes
+  roles:
+    - common
+    - ssh
+    - oh-my-zsh

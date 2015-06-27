@@ -1,0 +1,10 @@
+ssh:
+  users:
+    # user for ansible
+    - user: "support"
+      shell: "/bin/zsh" # for oh-my-zsh
+      groups: "sudo"
+      # mkpasswd --method=SHA-512
+      password: "YOUR PASSWORD HERE"
+      # cat ~/.ssh/id_rsa.pub
+      key: "YOUR PUBLIC KEY HERE"

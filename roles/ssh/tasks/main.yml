@@ -1,0 +1,36 @@
+- name: adds SSH users
+  user: 
+    name: "{{ item.user }}" 
+    shell: "{{ item.shell }}" 
+    password: "{{ item.password }}" 
+    groups: "{{ item.groups }}"
+  with_items:
+    - "{{ ssh.users }}"
+  when: ssh.users is defined
+  tags:
+    - ssh
+
+
+- name: adds SSH authorized keys
+  authorized_key:
+    user: "{{ item.user }}" 
+    key:  "{{ item.key }}"
+  with_items:
+    - "{{ ssh.users }}"
+  when: ssh.users is defined
+  notify: restart ssh
+  tags:
+    - ssh
+
+
+- name: configures SSH daemon
+  lineinfile: 
+    dest: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: "^PasswordAuthentication", line: "PasswordAuthentication no" }
+    - { regexp: "^PermitRootLogin", line: "PermitRootLogin no" }
+  notify: restart ssh
+  tags:
+    - ssh

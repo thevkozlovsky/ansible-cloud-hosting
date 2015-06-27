@@ -1,0 +1,26 @@
+# See: http://ohmyz.sh/
+
+- name: checkouts 'oh-my-zsh' from git
+  git: 
+    repo: https://github.com/robbyrussell/oh-my-zsh
+    dest: "/home/{{ item.user }}/.oh-my-zsh"
+    accept_hostkey: yes
+  with_items:
+    - "{{ ssh.users }}"
+  when: ssh.users is defined
+  notify: fix permissions
+  tags:
+    - oh-my-zsh
+
+
+- name: creates symlink to 'zshrc.zsh-template'
+  file: 
+    src: "/home/{{ item.user }}/.oh-my-zsh/templates/zshrc.zsh-template" 
+    dest: "/home/{{ item.user }}/.zshrc" 
+    state: link
+    force: yes
+  with_items:
+    - "{{ ssh.users }}"
+  when: ssh.users is defined
+  tags:
+    - oh-my-zsh
