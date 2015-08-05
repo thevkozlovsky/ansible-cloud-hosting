@@ -1,3 +1,5 @@
+---
+
 - name: restart swarm-manager
   docker:
     image: library/swarm:latest

@@ -2,12 +2,14 @@
 - hosts: all
   gather_facts: no
   roles:
-    - common
-    - ssh
-    - oh-my-zsh
+    - { role: 'common', tags: ['common'] }
+    - { role: 'ssh', tags: ['ssh'] }
+    - { role: 'oh-my-zsh', tags: ['oh-my-zsh'] }
 
 
+# Apply common configuration to all hosts in the cloud.
 - hosts: cloud
   roles:
-    - docker
-    - docker-swarm
+    - { role: 'docker', tags: ['docker'] }
+    - { role: 'docker-swarm', tags: ['docker-swarm'] }
+    - { role: 'docker-swarm-manager', tags: ['docker-swarm-manager'] }

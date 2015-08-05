@@ -1,18 +1,17 @@
+---
+
 certs:
   ca:
-    password: "YOUR PASSWORD HERE"
+    password: 'YOUR PASSWORD HERE'
 
-docker_swarm:
-  token: "YOUR DOCKER SWARM TOKEN HERE"
-  manager: "YOU DOCKER SWARM MANAGER IP HERE"
 
-ssh:
-  users:
-    # user for ansible
-    - user: "support"
-      shell: "/bin/zsh" # for oh-my-zsh
-      groups: "sudo"
-      # mkpasswd --method=SHA-512
-      password: "YOUR PASSWORD HERE"
-      # cat ~/.ssh/id_rsa.pub
-      key: "YOUR PUBLIC KEY HERE"
+# ssh
+ssh_users:
+  # user for ansible
+  - user: 'support'
+    shell: '/bin/zsh' # for oh-my-zsh
+    groups: 'sudo'
+    # mkpasswd --method=SHA-512
+    password: 'YOUR PASSWORD HERE'
+    # cat ~/.ssh/id_rsa.pub
+    key: 'YOUR PUBLIC KEY HERE'

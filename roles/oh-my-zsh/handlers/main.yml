@@ -1,10 +1,12 @@
+---
+
 - name: fix permissions
   file:
-    path: "/home/{{ item.user }}/"
-    owner: "{{ item.user }}"
-    group: "{{ item.user }}"
+    path: '/home/{{ item.user }}/'
+    owner: '{{ item.user }}'
+    group: '{{ item.user }}'
     state: directory
     recurse: yes
   with_items:
-    - "{{ ssh.users }}"
-  when: ssh.users is defined
+    - '{{ ssh_users }}'
+  when: ssh_users is defined

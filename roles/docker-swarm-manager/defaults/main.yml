@@ -1,0 +1,8 @@
+---
+
+docker_swarm_tls_enabled: yes
+docker_swarm_tls_dir: '/etc/docker/ssl'
+docker_swarm_tls_ca_cert_file: '/etc/docker/ssl/ca.pem'
+docker_swarm_tls_ca_key_file: '/etc/docker/ssl/ca-key.pem'
+docker_swarm_tls_client_cert_file: '/etc/docker/ssl/cert.pem'
+docker_swarm_tls_client_key_file: '/etc/docker/ssl/key.pem'

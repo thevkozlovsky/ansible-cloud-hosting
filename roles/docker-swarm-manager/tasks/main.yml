@@ -1,0 +1,7 @@
+---
+# See: https://docs.docker.com/swarm/
+# See: https://docs.docker.com/swarm/install-manual/
+# See: https://registry.hub.docker.com/_/swarm/
+
+- include: manager.yml
+  when: docker_swarm_manager_ip == ansible_eth0.ipv4.address # if manager host

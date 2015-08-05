@@ -1,0 +1,8 @@
+---
+# vars for 'SFO1' dc
+
+# docker-swarm & docker-swarm-manager
+docker_swarm_token: 'YOUR DOCKER SWARM TOKEN HERE'
+
+# docker-swarm-manager
+docker_swarm_manager_ip: '{{ hostvars[groups["sfo1"][0]]["ansible_eth0"]["ipv4"]["address"] }}' # first host in SFO1 DC

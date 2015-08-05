@@ -1,10 +1,9 @@
+---
 # Common roles for all hosts
 
 - name: sets hostname
   hostname: 
-    name: "{{ hostname }}"
-  tags:
-    - common
+    name: '{{ hostname }}'
 
 
 - name: configures apt sources
@@ -13,21 +12,17 @@
     dest: /etc/apt/sources.list
     owner: root
     group: root
-  tags:
-    - common
 
 
-- name: "updates apt cache & upgrades dist"
+- name: 'updates apt cache & upgrades dist'
   apt: 
-    upgrade: "yes"
+    upgrade: 'yes'
     update_cache: yes
-  tags:
-    - common
 
 
 - name: installs the necessary software
   apt: 
-    name: "{{ item }}"
+    name: '{{ item }}'
     update_cache: yes
     cache_valid_time: 3600
   with_items:
@@ -39,5 +34,3 @@
     - screen
     - lshw
     - python-pip  # Require for 'pip' ansible module
-  tags:
-    - common
