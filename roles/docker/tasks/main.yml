@@ -1,10 +1,25 @@
 ---
 
+- name: adds new gpg key
+  apt_key:
+    keyserver: '{{ docker_key_server }}'
+    id: '{{ docker_key_id }}'
+    state: present
+
+
+- name: configures apt sources
+  template: 
+    src: 'docker.list.j2'
+    dest: '/etc/apt/sources.list.d/docker.list'
+    owner: root
+    group: root
+
+
 - name: installs 'docker'
   apt: 
-    name: docker.io
+    name: docker-engine
     update_cache: yes
-    cache_valid_time: 3600
+    cache_valid_time: 0
 
 
 - name: adds 'docker' to start on boot
@@ -17,17 +32,21 @@
 - name: installs 'docker-py'
   pip: 
     name: docker-py
-    # TODO: Remove this (Fix for: Docker API error: client and server don't have same version (client : 1.17, server: 1.15))
-    version: 1.1.0
 
 
 - include: tls.yml
 
 
+- name: creates directory
+  file: 
+    state: directory
+    path: '/etc/systemd/system/docker.service.d/'
+
+
 - name: uploads docker configuration file
   template:
-    src: docker.j2
-    dest: /etc/default/docker
-  # restart docker if configuration changes
-  notify: 
-    - restart docker
+    src: 'docker.conf.j2'
+    dest: '/etc/systemd/system/docker.service.d/docker.conf'
+  notify:
+    - 'daemon-reload'
+    - 'restart docker'

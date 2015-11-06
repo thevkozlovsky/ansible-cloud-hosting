@@ -1,17 +1,38 @@
 ---
 
-certs:
-  ca:
-    password: 'YOUR PASSWORD HERE'
+common_packages:
+  - sudo
+  - htop
+  - mc
+  - apt-transport-https
+  - git
+  - screen
 
 
-# ssh
-ssh_users:
-  # user for ansible
-  - user: 'support'
-    shell: '/bin/zsh' # for oh-my-zsh
-    groups: 'sudo'
-    # mkpasswd --method=SHA-512
-    password: 'YOUR PASSWORD HERE'
-    # cat ~/.ssh/id_rsa.pub
-    key: 'YOUR PUBLIC KEY HERE'
+debian_release: jessie
+
+
+certs_ca_password: '12pwl34'
+
+
+# # ssh
+# ssh_users:
+#   # user for ansible
+#   - user: 'support'
+#     shell: '/bin/zsh' # for oh-my-zsh
+#     groups: 'sudo'
+#     # mkpasswd --method=SHA-512
+#     password: '$6$rounds=100000$dEkMBDQ7emTP6PST$iVhCYPK0uBf9UbgBkiLSBVclveQ1lGd/9RXgWBZiRfpx/4BRBfKvh3eY5TaptXPeRtMoWabLS9n0ZxtPVIeQu.'
+#     # cat ~/.ssh/id_rsa.pub
+#     key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC4eu+U51LSZqgThNJlZ/5Z1DySujnRLL4HITuulNF60M0xvKQOHk7oOrbt4kbKWb9tMliGNzHtIpBca0JUp92/pYgU9g4xLVVTSNr1mp2nUXOSgaSccfjy+6DczjAFkY6SwBcARRLf5V5WejuO2ZHVhBhN/E4wyhBO5WfA72imaOFkLw8d2yRG68+YuxzW6b5OcFSMHPsblgw9gONbTowoiDLxzeoH14DZ2cS6B9nd+jj//dIsU0jusMQw+EerDWB0GSxE/GEv17xjwikx+7VLwJuZyDmrY/BJUKbLdAD6LYxfYdAOMS0FPfyDIWqIFY+MUu4cCEDDE1XTfu0vOfpH inbox@vladkozlovski.com'
+
+
+# docker-consul
+docker_consul_encrypt: 'zXK3hO1Mk50YwSsZiD9tHQ=='
+#docker_consul_join: '{{ hostvars[groups["cloud"][0]]["ansible_eth0"]["ipv4"]["address"] }}' # first host in cloud group
+
+
+# docker
+docker_api_version: 1.18
+docker_key_server: "hkp://pgp.mit.edu:80"
+docker_key_id: "58118E89F3A912897C070ADBF76221572C52609D"

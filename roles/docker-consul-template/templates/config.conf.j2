@@ -1,0 +1,3 @@
+consul = "{{ ansible_eth0.ipv4.address }}:8500"
+token = "{{ docker_consul_encrypt }}"
+retry = "10s"

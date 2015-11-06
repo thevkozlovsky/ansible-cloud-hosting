@@ -1,23 +1,26 @@
-[cloud-ams3]
-192.168.1.1     debian_release=testing   hostname=debian1
-192.168.1.2     debian_release=testing   hostname=debian2
-192.168.1.3     debian_release=testing   hostname=debian3
+[ams3-cloud]
+188.166.0.24        hostname=debian1
+188.166.19.100      hostname=debian2
+178.62.225.10       hostname=debian3
 
-[cloud-sfo1]
-192.168.2.1     debian_release=testing   hostname=debian1
-192.168.2.2     debian_release=testing   hostname=debian2
-192.168.2.3     debian_release=testing   hostname=debian3
+[sfo1-cloud]
+159.203.249.55      hostname=debian1
+159.203.251.74      hostname=debian2
+159.203.249.121     hostname=debian3
 
+
+#--- in all DC ---#
 
 # cloud in all DC
 [cloud:children]
-cloud-ams3
-cloud-sfo1
+ams3-cloud
+sfo1-cloud
 
 
-# everything in the DC
+#--- everything in DC ---#
+
 [ams3:children]
-cloud-ams3
+ams3-cloud
 
 [sfo1:children]
-cloud-sfo1
+sfo1-cloud

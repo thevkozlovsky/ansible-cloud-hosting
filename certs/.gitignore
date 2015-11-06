@@ -2,3 +2,5 @@
 *
 # Except this file
 !.gitignore
+!consul1/serial
+!consul1/myca.conf

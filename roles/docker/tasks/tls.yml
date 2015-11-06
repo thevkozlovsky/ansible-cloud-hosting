@@ -18,11 +18,11 @@
     mode: 0400
     owner: root
   with_items:
-    - { src: 'certs/ca/ca.pem', dest: '{{ docker_tls_ca_cert_file }}' }
-    - { src: 'certs/ca/ca-key.pem', dest: '{{ docker_tls_ca_key_file }}' }
-  # restart docker if certifications changes
+    - { src: certs/ca/ca.pem, dest: '{{ docker_tls_ca_cert_file }}' }
+    - { src: certs/ca/ca-key.pem, dest: '{{ docker_tls_ca_key_file }}' }
+#  register: docker_configuration_changed
   notify: 
-    - restart docker
+    - restart docker # restart docker if certifications changes
 
 
 - name: generates RSA private key
@@ -30,9 +30,9 @@
   args:
     chdir: '{{ docker_tls_dir }}'
     creates: '{{ docker_tls_server_key_file }}'
-  # restart docker if key changes
+#  register: docker_configuration_changed
   notify: 
-    - restart docker
+    - restart docker # restart docker if key changes
 
 
 - name: creates certificate signing request
@@ -49,11 +49,11 @@
 
 
 - name: generates certificate
-  command: 'openssl x509 -req -days 365 -sha256 -in {{ docker_tls_dir }}/server.csr -CA {{ docker_tls_ca_cert_file }} -CAkey {{ docker_tls_ca_key_file }} -CAcreateserial -out {{ docker_tls_server_cert_file }} -extfile {{ docker_tls_dir }}/server-extfile.cnf -passin "pass:{{ certs.ca.password }}"'
+  command: 'openssl x509 -req -days 365 -sha256 -in {{ docker_tls_dir }}/server.csr -CA {{ docker_tls_ca_cert_file }} -CAkey {{ docker_tls_ca_key_file }} -CAcreateserial -out {{ docker_tls_server_cert_file }} -extfile {{ docker_tls_dir }}/server-extfile.cnf -passin "pass:{{ certs_ca_password }}"'
   args:
     chdir: '{{ docker_tls_dir }}'
     creates: '{{ docker_tls_server_cert_file }}'
-  # restart docker if certificate changes
+#  register: docker_configuration_changed
   notify: 
-    - restart docker
+    - restart docker # restart docker if certificate changes
 

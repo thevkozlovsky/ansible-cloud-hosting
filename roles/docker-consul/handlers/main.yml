@@ -1,0 +1,8 @@
+---
+
+- name: 'restart consul'
+  docker:
+    docker_api_version: '{{ docker_api_version }}'
+    image: 'progrium/consul:latest'
+    name: 'consul'
+    state: 'restarted'

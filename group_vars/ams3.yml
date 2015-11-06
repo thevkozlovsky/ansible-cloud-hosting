@@ -1,8 +1,11 @@
 ---
 # vars for 'AMS3' dc
 
-# docker-swarm & docker-swarm-manager
-docker_swarm_token: 'YOUR DOCKER SWARM TOKEN HERE'
-
 # docker-swarm-manager
 docker_swarm_manager_ip: '{{ hostvars[groups["ams3"][0]]["ansible_eth0"]["ipv4"]["address"] }}' # first host in AMS3 DC
+
+
+# docker-consul
+docker_consul_join: '{{ hostvars[groups["ams3"][0]]["ansible_eth0"]["ipv4"]["address"] }}' # first host in AMS3 DC
+#docker_consul_encrypt: 'zXK3hO1Mk50YwSsZiD9tHQ=='
+docker_consul_dc: 'ams3'

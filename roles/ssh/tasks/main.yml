@@ -29,6 +29,6 @@
     line: '{{ item.line }}'
   with_items:
     - { regexp: '^PasswordAuthentication', line: 'PasswordAuthentication no' }
-    - { regexp: '^PermitRootLogin', line: 'PermitRootLogin no' }
+#    - { regexp: '^PermitRootLogin', line: 'PermitRootLogin no' }
   notify: 
     - restart ssh

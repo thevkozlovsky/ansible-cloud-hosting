@@ -1,0 +1,21 @@
+{
+    "bootstrap": false,
+    "server": true,
+    "datacenter": "{{ docker_consul_dc }}",
+    "data_dir": "/data",
+    "ports": {
+      "https": 8543
+    },
+    "encrypt": "{{ docker_consul_encrypt }}",
+    "ca_file": "/etc/consul.d/ssl/ca.cert",
+    "cert_file": "/etc/consul.d/ssl/consul.cert",
+    "key_file": "/etc/consul.d/ssl/consul.key",
+    "verify_incoming": true,
+    "verify_outgoing": true,
+    "log_level": "INFO",
+    "enable_syslog": false,
+    "start_join_wan": [
+        "188.166.0.24",
+        "159.203.249.55"
+    ]
+}

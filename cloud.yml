@@ -1,0 +1,11 @@
+---
+# Apply common configuration to all hosts in the cloud.
+
+- hosts: cloud
+  roles:
+    - { role: 'docker', tags: ['docker'] }
+    - { role: 'docker-consul', tags: ['docker-consul'] }
+    - { role: 'docker-consul-registrator', tags: ['docker-consul-registrator'] }
+    - { role: 'docker-consul-template', tags: ['docker-consul-template'] }
+    - { role: 'docker-swarm', tags: ['docker-swarm'] }
+    - { role: 'docker-swarm-manager', tags: ['docker-swarm-manager'] }

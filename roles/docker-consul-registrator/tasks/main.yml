@@ -1,0 +1,16 @@
+---
+# See: https://github.com/gliderlabs/registrator
+
+- name: retrieves and launches 'consul-registrator' image
+  docker:
+    docker_api_version: '{{ docker_api_version }}'
+    image: gliderlabs/registrator:latest
+    volumes:
+      - '/var/run/docker.sock:/tmp/docker.sock' # to listen docker events
+    hostname: '{{ ansible_hostname }}'
+    name: consul-registrator
+    command: 'consul://{{ ansible_eth0.ipv4.address }}:8500'
+    restart_policy: always # try to restart if the container exits
+    restart_policy_retry: 3 # it will try to restart 3 times before giving up
+    pull: always # will be checked for a newer version of the image each time the task executes
+    state: started

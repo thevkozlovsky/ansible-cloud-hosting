@@ -17,20 +17,19 @@
 - name: 'updates apt cache & upgrades dist'
   apt: 
     upgrade: 'yes'
-    update_cache: yes
+    update_cache: 'yes'
 
 
 - name: installs the necessary software
   apt: 
     name: '{{ item }}'
-    update_cache: yes
+    update_cache: 'yes'
     cache_valid_time: 3600
   with_items:
-    - sudo
-    - zsh # for oh-my-zsh support
-    - htop
-    - mc
-    - git
-    - screen
-    - lshw
-    - python-pip  # Require for 'pip' ansible module
+    - '{{ common_packages }}'
+
+
+# Require for 'pip' ansible module
+- name: installs the python pip module 
+  easy_install:
+    name: pip
