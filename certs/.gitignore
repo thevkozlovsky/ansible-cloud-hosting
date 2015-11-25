@@ -1,6 +1,8 @@
 # Ignore everything in this directory
 *
+
 # Except this file
-!.gitignore
+!consul/
 !consul/serial
 !consul/myca.conf
+!.gitignore
