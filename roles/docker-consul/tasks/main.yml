@@ -1,9 +1,4 @@
 ---
-# See: https://github.com/progrium/docker-consul
-
-# See: https://www.digitalocean.com/community/tutorials/an-introduction-to-using-consul-a-service-discovery-system-on-ubuntu-14-04
-# See: https://www.digitalocean.com/community/tutorials/how-to-configure-consul-in-a-production-environment-on-ubuntu-14-04
-# See: https://www.digitalocean.com/community/tutorials/how-to-secure-consul-with-tls-encryption-on-ubuntu-14-04
 
 - name: creates directories
   file: 
@@ -25,8 +20,9 @@
     - { src: 'certs/consul/ca.cert', dest: '{{ docker_consul_tls_ca_cert_file }}' }
     - { src: 'certs/consul/consul.cert', dest: '{{ docker_consul_tls_server_cert_file }}' }
     - { src: 'certs/consul/consul.key', dest: '{{ docker_consul_tls_server_key_file }}' }
-  notify: 
-    - restart consul # restart consul if certifications changes
+  notify:
+    # restart consul if certifications changes
+    - restart consul
 
 
 - name: uploads configuration files
@@ -35,8 +31,9 @@
     dest: '{{ item.dest }}'
   with_items:
     - { src: 'config.json.j2', dest: '/etc/consul/config.json' }
-  notify: 
-    - restart consul # restart consul if configuration changes
+  notify:
+    # restart consul if configuration changes
+    - restart consul
 
 
 # Fir for: One or more undefined variables: 'ansible_docker0' is undefined
@@ -48,68 +45,44 @@
 - name: retrieves and launches 'consul' image
   docker:
     docker_api_version: '{{ docker_api_version }}'
-    image: progrium/consul:latest
+    image: '{{ docker_consul_image }}'
     ports:
+      # Used by servers to handle incoming requests from other agents (TCP only).
       - '{{ ansible_eth0.ipv4.address }}:8300:8300'
-      - '{{ ansible_eth0.ipv4.address }}:8301:8301' # LAN
-      - '{{ ansible_eth0.ipv4.address }}:8301:8301/udp' # LAN
-      - '{{ ansible_eth0.ipv4.address }}:8302:8302' # WAN
-      - '{{ ansible_eth0.ipv4.address }}:8302:8302/udp' # WAN
-      - '{{ ansible_eth0.ipv4.address }}:8400:8400' # RPC
-      - '{{ ansible_eth0.ipv4.address }}:8500:8500' # HTTP
-      - '{{ ansible_eth0.ipv4.address }}:8543:8543' # HTTPS
-      - '{{ ansible_docker0.ipv4.address }}:53:53/udp' # DNS
+      # Used to handle gossip in the LAN. Required by all agents (TCP and UDP).
+      - '{{ ansible_eth0.ipv4.address }}:8301:8301'
+      - '{{ ansible_eth0.ipv4.address }}:8301:8301/udp'
+      # Used by servers to gossip over the WAN to other servers (TCP and UDP).
+      - '{{ ansible_eth0.ipv4.address }}:8302:8302'
+      - '{{ ansible_eth0.ipv4.address }}:8302:8302/udp'
+      # Used by all agents to handle RPC from the CLI (TCP only).
+      - '{{ ansible_eth0.ipv4.address }}:8400:8400'
+      # Used by clients to talk to the HTTP/HTTPS API (TCP only).
+      - '{{ ansible_eth0.ipv4.address }}:8500:8500'
+      - '{{ ansible_eth0.ipv4.address }}:8543:8543'
+      # Used to resolve DNS queries (TCP? and UDP).
+      - '{{ ansible_docker0.ipv4.address }}:53:8600/tcp'
+      - '{{ ansible_docker0.ipv4.address }}:53:8600/udp'
     volumes:
-      - '/var/consul:/data' # to support persistent storage
-      - '/etc/consul/config.json:/etc/consul.d/server/config.json:ro' # configuration file
-      - '{{ docker_consul_tls_dir }}:/etc/consul.d/ssl/' # ssl 
+      # to support persistent storage
+      - '/var/consul:/data'
+      # configuration file
+      - '/etc/consul/config.json:/etc/consul.d/server/config.json:ro'
+      # ssl
+      - '{{ docker_consul_tls_dir }}:/etc/consul.d/ssl/'
     hostname: '{{ ansible_hostname }}'
     name: consul
-#    command: '-advertise {{ ansible_eth0.ipv4.address }} -bootstrap-expect 3 -join-wan xx.xx.xx.xx  -config-file /etc/consul.d/server/config.json'
-    command: '-advertise {{ ansible_eth0.ipv4.address }} -bootstrap-expect 3 -config-file /etc/consul.d/server/config.json'
+    command: '-advertise {{ ansible_eth0.ipv4.address }} {% if docker_consul_join == ansible_eth0.ipv4.address %} -bootstrap-expect 3 {% else %} -join {{ docker_consul_join }} {% endif %} -config-file /etc/consul.d/server/config.json'
     env:
       # variables for consul
-      SERVICE_53_NAME: 'consul-dns'
       SERVICE_8500_NAME: 'consul-api'
+      SERVICE_8600_NAME: 'consul-dns'
       SERVICE_TAGS: '{{ ansible_hostname }}'
-#      SERVICE_REGION: 'EU1'
-    restart_policy: always # try to restart if the container exits
-    restart_policy_retry: 3 # it will try to restart 3 times before giving up
-    pull: always # will be checked for a newer version of the image each time the task executes
     state: started
-  when: docker_consul_join == ansible_eth0.ipv4.address # if master
-
-
-- name: retrieves and launches 'consul' image
-  docker:
-    docker_api_version: '{{ docker_api_version }}'
-    image: progrium/consul:latest
-    ports:
-      - '{{ ansible_eth0.ipv4.address }}:8300:8300'
-      - '{{ ansible_eth0.ipv4.address }}:8301:8301' # LAN
-      - '{{ ansible_eth0.ipv4.address }}:8301:8301/udp' # LAN
-      - '{{ ansible_eth0.ipv4.address }}:8302:8302' # WAN
-      - '{{ ansible_eth0.ipv4.address }}:8302:8302/udp' # WAN
-      - '{{ ansible_eth0.ipv4.address }}:8400:8400' # RPC
-      - '{{ ansible_eth0.ipv4.address }}:8500:8500' # HTTP
-      - '{{ ansible_eth0.ipv4.address }}:8543:8543' # HTTPS
-      - '{{ ansible_docker0.ipv4.address }}:53:53/udp' # DNS
-    volumes:
-      - '/var/consul:/data' # to support persistent storage
-      - '/etc/consul/config.json:/etc/consul.d/server/config.json:ro' # configuration file
-      - '{{ docker_consul_tls_dir }}:/etc/consul.d/ssl/' # ssl 
-    hostname: '{{ ansible_hostname }}'
-    name: consul
-    command: '-advertise {{ ansible_eth0.ipv4.address }} -join {{ docker_consul_join }} -config-file /etc/consul.d/server/config.json'
-    env:
-      # variables for consul
-      SERVICE_53_NAME: 'consul-dns'
-      SERVICE_8500_NAME: 'consul-api'
-      SERVICE_TAGS: '{{ ansible_hostname }}'
-#      SERVICE_REGION: 'EU1'
-    restart_policy: always # try to restart if the container exits
-    restart_policy_retry: 3 # it will try to restart 3 times before giving up
-    pull: always # will be checked for a newer version of the image each time the task executes
-    state: started
-  when: docker_consul_join != ansible_eth0.ipv4.address # if secondary
+    # will be checked for a newer version of the image each time the task executes
+    pull: always
+    # try to restart if the container exits
+    restart_policy: always
+    # it will try to restart 3 times before giving up
+    restart_policy_retry: 3
 

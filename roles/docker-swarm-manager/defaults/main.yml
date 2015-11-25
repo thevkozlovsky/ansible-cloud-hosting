@@ -1,5 +1,7 @@
 ---
 
+docker_swarm_manager_image: 'swarm:latest'
+
 docker_swarm_tls_enabled: yes
 docker_swarm_tls_dir: '/etc/docker/ssl'
 docker_swarm_tls_ca_cert_file: '/etc/docker/ssl/ca.pem'

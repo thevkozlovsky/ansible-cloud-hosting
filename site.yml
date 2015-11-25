@@ -1,11 +1,16 @@
 ---
-# Apply common roles to all hosts
 
 - hosts: all
   gather_facts: no
   roles:
     - { role: 'common', tags: ['common'] }
-    - { role: 'ssh', tags: ['ssh'] }
 
 
-- include: cloud.yml
+- hosts: cloud
+  roles:
+    - { role: 'docker', tags: ['docker'] }
+    - { role: 'docker-consul', tags: ['docker-consul'] }
+    - { role: 'docker-consul-registrator', tags: ['docker-consul-registrator'] }
+    - { role: 'docker-consul-template', tags: ['docker-consul-template'] }
+    - { role: 'docker-swarm', tags: ['docker-swarm'] }
+    - { role: 'docker-swarm-manager', tags: ['docker-swarm-manager'] }

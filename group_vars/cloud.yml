@@ -1,0 +1,11 @@
+---
+
+# docker
+docker_api_version: 1.18
+docker_key_server: "hkp://pgp.mit.edu:80"
+docker_key_id: "58118E89F3A912897C070ADBF76221572C52609D"
+
+# docker-consul
+docker_consul_encrypt: 'L+3UkrkFeXHQBT97nTZI/g=='
+docker_consul_start_join_wan:
+  - "{{ hostvars[groups['dc1'][0]]['ansible_eth0']['ipv4']['address'] }}"

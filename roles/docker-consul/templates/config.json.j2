@@ -2,7 +2,9 @@
     "bootstrap": false,
     "server": true,
     "datacenter": "{{ docker_consul_dc }}",
+    "client_addr": "0.0.0.0",
     "data_dir": "/data",
+    "ui_dir": "/ui",
     "ports": {
       "https": 8543
     },
@@ -15,7 +17,8 @@
     "log_level": "INFO",
     "enable_syslog": false,
     "start_join_wan": [
-        "188.166.0.24",
-        "159.203.249.55"
+        {% for item in docker_consul_start_join_wan %}
+            "{{ item }}"{% if not loop.last %},{% endif %}
+        {% endfor %}
     ]
 }

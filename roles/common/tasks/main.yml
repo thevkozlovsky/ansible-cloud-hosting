@@ -1,11 +1,6 @@
 ---
 # Common roles for all hosts
 
-- name: sets hostname
-  hostname: 
-    name: '{{ hostname }}'
-
-
 - name: configures apt sources
   template: 
     src: sources.list.j2

@@ -1,5 +1,4 @@
 ---
-# See: https://github.com/hashicorp/consul-template
 
 - name: creates directories
   file: 
@@ -16,22 +15,28 @@
     dest: '{{ item.dest }}'
   with_items:
     - { src: 'config.conf.j2', dest: '/etc/consul-template/config.d/config.conf' }
-  notify: 
-    - restart consul-template # restart consul if configuration changes
+  notify:
+    # restart consul if configuration changes
+    - restart consul-template
 
 
 - name: retrieves and launches 'consul-template' image
   docker:
     docker_api_version: '{{ docker_api_version }}'
-    image: vladkozlovski/consul-template:latest
+    image: '{{ docker_consul_template_image }}'
     volumes:
-      - '/var/run/docker.sock:/tmp/docker.sock' # to listen docker events
+      # to listen docker events
+      - '/var/run/docker.sock:/tmp/docker.sock'
       - '/etc/consul-template:/consul-template'
-      - '/var/www:/var/www' # to support nginx
+      # to support nginx
+      - '/var/www:/var/www'
     hostname: '{{ ansible_hostname }}'
     command: '/usr/local/bin/consul-template -config /consul-template/config.d/config.conf'
     name: consul-template
-    restart_policy: always # try to restart if the container exits
-    restart_policy_retry: 3 # it will try to restart 3 times before giving up
-    pull: always # will be checked for a newer version of the image each time the task executes
     state: started
+    # will be checked for a newer version of the image each time the task executes
+    pull: always
+    # try to restart if the container exits
+    restart_policy: always
+    # it will try to restart 3 times before giving up
+    restart_policy_retry: 3

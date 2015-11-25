@@ -1,26 +1,17 @@
-[ams3-cloud]
-188.166.0.24        hostname=debian1
-188.166.19.100      hostname=debian2
-178.62.225.10       hostname=debian3
-
-[sfo1-cloud]
-159.203.249.55      hostname=debian1
-159.203.251.74      hostname=debian2
-159.203.249.121     hostname=debian3
+[dc1-cloud]
+192.168.1.1
+192.168.1.2
+192.168.1.3
 
 
 #--- in all DC ---#
 
 # cloud in all DC
 [cloud:children]
-ams3-cloud
-sfo1-cloud
+dc1-cloud
 
 
 #--- everything in DC ---#
 
-[ams3:children]
-ams3-cloud
-
-[sfo1:children]
-sfo1-cloud
+[dc1:children]
+dc1-cloud

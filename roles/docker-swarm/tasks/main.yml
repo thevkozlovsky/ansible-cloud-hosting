@@ -1,13 +1,18 @@
 ---
 # See: https://registry.hub.docker.com/_/swarm/
 
-- name: retrieves and launches 'Docker Swarm' image
+- name: retrieves and launches 'docker-swarm' image
   docker:
     docker_api_version: '{{ docker_api_version }}'
-    image: library/swarm:latest
+    image: '{{ docker_swarm_image }}'
     hostname: '{{ ansible_hostname }}'
     name: docker-swarm
     command: 'join --addr={{ ansible_eth0.ipv4.address }}:2376 consul://{{ ansible_eth0.ipv4.address }}:8500/swarm'
-    restart_policy: always # try to restart if the container exits
-    restart_policy_retry: 3 # it will try to restart 3 times before giving up
     state: started
+    # will be checked for a newer version of the image each time the task executes
+    pull: always
+    # try to restart if the container exits
+    restart_policy: always
+    # it will try to restart 3 times before giving up
+    restart_policy_retry: 3
+

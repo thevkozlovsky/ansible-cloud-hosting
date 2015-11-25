@@ -20,9 +20,9 @@
   with_items:
     - { src: certs/ca/ca.pem, dest: '{{ docker_tls_ca_cert_file }}' }
     - { src: certs/ca/ca-key.pem, dest: '{{ docker_tls_ca_key_file }}' }
-#  register: docker_configuration_changed
-  notify: 
-    - restart docker # restart docker if certifications changes
+  notify:
+    # restart docker if certifications changes
+    - restart docker
 
 
 - name: generates RSA private key
@@ -30,9 +30,9 @@
   args:
     chdir: '{{ docker_tls_dir }}'
     creates: '{{ docker_tls_server_key_file }}'
-#  register: docker_configuration_changed
-  notify: 
-    - restart docker # restart docker if key changes
+  notify:
+    # restart docker if key changes
+    - restart docker
 
 
 - name: creates certificate signing request
@@ -53,7 +53,7 @@
   args:
     chdir: '{{ docker_tls_dir }}'
     creates: '{{ docker_tls_server_cert_file }}'
-#  register: docker_configuration_changed
-  notify: 
-    - restart docker # restart docker if certificate changes
+  notify:
+    # restart docker if certificate changes
+    - restart docker
 

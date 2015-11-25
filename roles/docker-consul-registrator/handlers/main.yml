@@ -1,0 +1,8 @@
+---
+
+- name: restart consul-registrator
+  docker:
+    docker_api_version: '{{ docker_api_version }}'
+    image: '{{ docker_consul_registrator_image }}'
+    name: consul-registrator
+    state: restarted

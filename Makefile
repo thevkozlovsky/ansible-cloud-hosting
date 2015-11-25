@@ -6,22 +6,19 @@
 #
 
 PRIVATE_KEY=~/.ssh/id_rsa
-SWARM_IP=188.166.0.24:8000
+SWARM_IP=178.62.232.38:8000
 CA_CERTS_DIR=certs/ca
 CONSUL_CERTS_DIR=certs/consul
 DOCKER_CERTS_DIR=certs/docker
 
-first-run:
+run:
 	@(ansible-playbook -i stage site.yml -u root --private-key $(PRIVATE_KEY))
 
-run:
-	@(ansible-playbook -i stage site.yml -u support -s -K --private-key $(PRIVATE_KEY))
-
 setup:
-	@(ansible cloud -i stage -u support -m setup --private-key $(PRIVATE_KEY))
+	@(ansible cloud -i stage -u root -m setup --private-key $(PRIVATE_KEY))
 
 ping:
-	@(ansible all -i stage -m ping -u support)
+	@(ansible all -i stage -m ping -u root)
 
 tasks:
 	@(ansible-playbook -i stage site.yml --list-tasks)

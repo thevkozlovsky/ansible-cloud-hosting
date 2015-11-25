@@ -50,24 +50,31 @@
   args:
     chdir: '{{ docker_swarm_tls_dir }}'
     creates: '{{ docker_swarm_tls_client_cert_file }}'
-  notify: 
-    - restart swarm-manager # restart docker if certificate changes
+  notify:
+    # restart docker if certificate changes
+    - restart swarm-manager
 
 
 - name: retrieves and launches 'docker swarm' image
   docker:
     docker_api_version: '{{ docker_api_version }}'
-    image: library/swarm:latest
+    image: '{{ docker_swarm_manager_image }}'
     ports:
       - '{{ ansible_eth0.ipv4.address }}:8000:2375'
     volumes:
-      - '{{ docker_swarm_tls_dir }}:{{ docker_swarm_tls_dir }}' # tls
+      # tls
+      - '{{ docker_swarm_tls_dir }}:{{ docker_swarm_tls_dir }}'
     hostname: '{{ ansible_hostname }}'
     name: docker-swarm-manager
     command: 'manage --tlsverify --tlscacert={{ docker_swarm_tls_ca_cert_file }} --tlscert={{ docker_swarm_tls_client_cert_file }} --tlskey={{ docker_swarm_tls_client_key_file }} consul://{{ ansible_eth0.ipv4.address }}:8500/swarm'
-    restart_policy: always # try to restart if the container exits
-    restart_policy_retry: 3 # it will try to restart 3 times before giving up
     state: started
+    # will be checked for a newer version of the image each time the task executes
+    pull: always
+    # try to restart if the container exits
+    restart_policy: always
+    # it will try to restart 3 times before giving up
+    restart_policy_retry: 3
+
 
 
 - name: fetches certificates
