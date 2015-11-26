@@ -61,8 +61,8 @@
       - '{{ ansible_eth0.ipv4.address }}:8500:8500'
       - '{{ ansible_eth0.ipv4.address }}:8543:8543'
       # Used to resolve DNS queries (TCP? and UDP).
-      - '{{ ansible_docker0.ipv4.address }}:53:8600/tcp'
-      - '{{ ansible_docker0.ipv4.address }}:53:8600/udp'
+      - '{{ ansible_docker0.ipv4.address }}:53:53/tcp'
+      - '{{ ansible_docker0.ipv4.address }}:53:53/udp'
     volumes:
       # to support persistent storage
       - '/var/consul:/data'
@@ -76,7 +76,7 @@
     env:
       # variables for consul
       SERVICE_8500_NAME: 'consul-api'
-      SERVICE_8600_NAME: 'consul-dns'
+      SERVICE_53_NAME: 'consul-dns'
       SERVICE_TAGS: '{{ ansible_hostname }}'
     state: started
     # will be checked for a newer version of the image each time the task executes

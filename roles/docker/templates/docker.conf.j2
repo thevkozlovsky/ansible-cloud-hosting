@@ -1,3 +1,3 @@
 [Service]
 ExecStart=
-ExecStart=/usr/bin/docker daemon --dns 172.17.42.1 --dns 8.8.8.8 --dns-search service.consul --userland-proxy=false -H tcp://0.0.0.0:2376 --tlsverify --tlscacert={{ docker_tls_ca_cert_file }} --tlscert={{ docker_tls_server_cert_file }} --tlskey={{ docker_tls_server_key_file }}
+ExecStart=/usr/bin/docker daemon --dns 172.17.0.1  --dns 8.8.8.8 --dns-search service.consul --userland-proxy=false -H fd:// -H tcp://0.0.0.0:2376 --tlsverify --tlscacert={{ docker_tls_ca_cert_file }} --tlscert={{ docker_tls_server_cert_file }} --tlskey={{ docker_tls_server_key_file }}
